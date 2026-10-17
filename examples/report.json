@@ -1,0 +1,21 @@
+{
+  "title": "The River Bell",
+  "subtitle": "Fictional three-performance feasibility note",
+  "status": "Fictional example — not a booking, quote or production recommendation",
+  "summary": "At the supplied occupancy and price the scenario does not cover its costs. The calculation is a starting point for the human's decision, not evidence of likely ticket sales.",
+  "findings": [
+    {"label": "Calculated", "text": "The paid-ticket scenario has a funding gap on the stated assumptions."},
+    {"label": "Assumed", "text": "The fixture uses 120 saleable seats and 75% expected paid occupancy; no demand evidence is supplied."},
+    {"label": "Unknown", "text": "Availability, tax, staffing inclusions and actual access and permission requirements need confirmation."}
+  ],
+  "questions": [
+    "Which dates and venue layout are actually available?",
+    "What do the venue and staff rates include, and what tax treatment applies?",
+    "Which access provisions are appropriate and properly resourced?",
+    "What permissions are required for the material and intended uses?"
+  ],
+  "sources": [
+    {"label": "Fictional supplied brief", "reference": "examples/brief.json"},
+    {"label": "Fictional structured cost inputs", "reference": "examples/budget.json"}
+  ]
+}

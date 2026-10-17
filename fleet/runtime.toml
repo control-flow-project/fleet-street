@@ -1,0 +1,96 @@
+fleet = "fleet-street"
+
+[coordination]
+adapter = "crossfire"
+server = "https://example.test"
+owner = "@owner:example.test"
+
+[[instances]]
+key = "stage-manager"
+name = "sample-stage-manager"
+definition = "stage-manager"
+workarea = "agents/stage-manager/workarea/stage-manager"
+
+[instances.listener_options]
+history_mode = "shared"
+
+[[instances]]
+key = "dramaturg"
+name = "sample-dramaturg"
+definition = "dramaturg"
+workarea = "agents/dramaturg/workarea/dramaturg"
+
+[instances.listener_options]
+history_mode = "shared"
+
+[[instances]]
+key = "venue-scout"
+name = "sample-venue-scout"
+definition = "venue-scout"
+workarea = "agents/venue-scout/workarea/venue-scout"
+
+[instances.listener_options]
+history_mode = "shared"
+
+[[instances]]
+key = "production-planner"
+name = "sample-production-planner"
+definition = "production-planner"
+workarea = "agents/production-planner/workarea/production-planner"
+
+[instances.listener_options]
+history_mode = "shared"
+
+[[instances]]
+key = "budget-analyst"
+name = "sample-budget-analyst"
+definition = "budget-analyst"
+workarea = "agents/budget-analyst/workarea/budget-analyst"
+
+[instances.listener_options]
+history_mode = "shared"
+
+[[instances]]
+key = "accessibility-reviewer"
+name = "sample-accessibility-reviewer"
+definition = "accessibility-reviewer"
+workarea = "agents/accessibility-reviewer/workarea/accessibility-reviewer"
+
+[instances.listener_options]
+history_mode = "shared"
+
+[[instances]]
+key = "audience-researcher"
+name = "sample-audience-researcher"
+definition = "audience-researcher"
+workarea = "agents/audience-researcher/workarea/audience-researcher"
+
+[instances.listener_options]
+history_mode = "shared"
+
+[[instances]]
+key = "publicity-editor"
+name = "sample-publicity-editor"
+definition = "publicity-editor"
+workarea = "agents/publicity-editor/workarea/publicity-editor"
+
+[instances.listener_options]
+history_mode = "shared"
+
+[[instances]]
+key = "rights-researcher"
+name = "sample-rights-researcher"
+definition = "rights-researcher"
+workarea = "agents/rights-researcher/workarea/rights-researcher"
+
+[instances.listener_options]
+history_mode = "shared"
+
+[[instances]]
+key = "fact-checker"
+name = "sample-fact-checker"
+definition = "fact-checker"
+workarea = "agents/fact-checker/workarea/fact-checker"
+
+[instances.listener_options]
+history_mode = "shared"
