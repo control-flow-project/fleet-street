@@ -1,0 +1,19 @@
+{
+  "name": "@ctlflow/fleet-street",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "author": "Jeswin P Kumar <jeswinpk@agilehead.com>",
+  "type": "module",
+  "engines": { "node": ">=26.0.0", "npm": ">=11.17.0" },
+  "scripts": {
+    "test": "python3 -m unittest discover -s tests -v",
+    "test:fleet": "node scripts/verify-fleet.mjs",
+    "test:browser": "node --test tests/browser.test.mjs",
+    "check": "npm test && npm run test:fleet && npm run test:browser"
+  },
+  "devDependencies": {
+    "@ctlflow/fleet": "0.1.20",
+    "playwright": "1.63.0"
+  }
+}

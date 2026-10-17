@@ -1,0 +1,21 @@
+{
+  "kind": "fictional-example",
+  "assignment": "river-bell-feasibility",
+  "title": "The River Bell — a fictional studio proposal",
+  "request": "Can three small London studio performances cover the supplied costs, and what needs confirmation before committing?",
+  "form": "A devised piece by a fictional company, with five performers",
+  "audience": "An audience hypothesis to test; no sales evidence is supplied",
+  "venue": "Example Studio, a fictional London venue",
+  "constraints": [
+    "Three evening performances; dates are not booked",
+    "120 saleable paid seats per performance in the assumed layout",
+    "No public release, external enquiries, purchases or bookings are authorized"
+  ],
+  "deliverable": "A reviewed cost scenario, practical uncertainties and questions for the human",
+  "inputs": ["examples/budget.json"],
+  "unknowns": [
+    "Venue and staff availability, current hire terms and tax treatment",
+    "Production-specific access needs and provisions",
+    "Rights and permission requirements for the actual material"
+  ]
+}

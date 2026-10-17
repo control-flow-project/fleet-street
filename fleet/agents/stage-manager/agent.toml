@@ -1,0 +1,15 @@
+name = "Stage manager"
+runtime = "codex"
+
+[runtime_options]
+model_reasoning_effort = "medium"
+sandbox_mode = "danger-full-access"
+approval_policy = "on-request"
+
+[coordination_options]
+wake_mode = "selected"
+permissions = ["room.agent.invite"]
+
+[[coordination_options.wake_senders]]
+matrix_user_id = "@owner:example.test"
+include_agents = true
