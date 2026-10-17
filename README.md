@@ -135,7 +135,8 @@ scenarios. They accept small structured JSON inputs (maximum 1 MiB), validate
 fields and use Decimal arithmetic. They do not interpret arbitrary HTML tables,
 download data or maintain a database.
 
-The local report contains HTML, CSS, an authored SVG and calculated budget JSON.
+The local report contains HTML, CSS, an authored SVG, calculated budget JSON and
+the MIT notice for the supplied assets.
 Generating it is not publication. [Publication instructions](docs/walkthrough.md#optional-public-report)
 explain explicit consent, the native client and who can see the resulting files.
 

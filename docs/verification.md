@@ -45,7 +45,7 @@ Run these commands under the resource scope shown in the README.
 | Report widths | 320, 390, 768 and 1440 px without page-level overflow |
 | Shared skills | Five pass the Codex skill validator |
 | Instructions | Ten distinct role procedures and one shared routing directory; reviewed for scope and disclosure rules |
-| Static report | Exactly four files; no remote resources, scripts, source-directory copying or automatic publication |
+| Static report | Exactly five files, including the MIT asset notice; no remote resources, scripts, source-directory copying or automatic publication |
 | Licenses/package metadata | MIT; package private; no external source material included |
 
 The first acceptance run rejected copied negative fixtures because the test's

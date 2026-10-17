@@ -22,7 +22,8 @@ class ReportTests(unittest.TestCase):
     def test_complete_local_bundle_is_not_publication(self) -> None:
         result = create_report(self.report, self.budget, self.output)
         self.assertFalse(result["published"])
-        self.assertEqual({str(filename.relative_to(self.output)) for filename in self.output.rglob("*") if filename.is_file()}, {"index.html", "assets/report.css", "assets/proscenium.svg", "data/budget.json"})
+        self.assertEqual({str(filename.relative_to(self.output)) for filename in self.output.rglob("*") if filename.is_file()}, {"index.html", "assets/report.css", "assets/proscenium.svg", "assets/LICENSE.txt", "data/budget.json"})
+        self.assertEqual((self.output / "assets/LICENSE.txt").read_bytes(), (ROOT / "LICENSE").read_bytes())
         self.assertEqual(json.loads((self.output / "data/budget.json").read_text())["balance"], "-457.75")
         html = (self.output / "index.html").read_text()
         self.assertIn("Fictional example", html)

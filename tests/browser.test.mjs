@@ -19,7 +19,7 @@ before(async () => {
   fixture = fs.mkdtempSync(path.join(root, ".temp/report-"));
   const generated = spawnSync("python3", ["-m", "tools.fleet_street", "report", "--input", "examples/report.json", "--budget", "examples/budget.json", "--directory", path.join(fixture, "report")], { cwd: root, encoding: "utf8", timeout: 10000 });
   assert.equal(generated.status, 0, generated.stderr);
-  const files = new Map([["/", ["index.html", "text/html"]], ["/assets/report.css", ["assets/report.css", "text/css"]], ["/assets/proscenium.svg", ["assets/proscenium.svg", "image/svg+xml"]], ["/data/budget.json", ["data/budget.json", "application/json"]]]);
+  const files = new Map([["/", ["index.html", "text/html"]], ["/assets/report.css", ["assets/report.css", "text/css"]], ["/assets/proscenium.svg", ["assets/proscenium.svg", "image/svg+xml"]], ["/assets/LICENSE.txt", ["assets/LICENSE.txt", "text/plain"]], ["/data/budget.json", ["data/budget.json", "application/json"]]]);
   server = http.createServer((request, response) => {
     const file = files.get(new URL(request.url, "http://localhost").pathname);
     if (!file) { response.writeHead(404); response.end(); return; }

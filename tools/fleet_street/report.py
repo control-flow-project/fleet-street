@@ -11,6 +11,7 @@ from .validation import record, sequence, text
 
 
 ASSETS = Path(__file__).parent / "assets"
+ASSET_FILES = ["report.css", "proscenium.svg", "LICENSE.txt"]
 
 
 def escaped(value: object, label: str) -> str:
@@ -63,7 +64,7 @@ def render_report(value: object, budget_input: object) -> tuple[str, dict[str, o
 <section aria-labelledby="findings"><h2 id="findings">Findings</h2><ul>{"".join(findings)}</ul></section>
 <section aria-labelledby="questions"><h2 id="questions">Questions before commitment</h2><ol>{"".join(questions)}</ol></section>
 <section aria-labelledby="sources"><h2 id="sources">Source references</h2><ul>{"".join(sources)}</ul></section>
-<footer>This file is a locally prepared draft. Generating it does not publish it, confirm its statements or authorize disclosure. If released through crossfire, anyone with the resulting link can view every file in the publication.</footer></main></body></html>'''
+<footer>This file is a locally prepared draft. Generating it does not publish it, confirm its statements or authorize disclosure. If released through crossfire, anyone with the resulting link can view every file in the publication. <a href="assets/LICENSE.txt">MIT license for report assets</a>.</footer></main></body></html>'''
     return document, budget
 
 
@@ -75,10 +76,10 @@ def create_report(value: object, budget_input: object, directory: Path) -> dict[
     try:
         write_new(target / "index.html", document + "\n")
         write_new(target / "data/budget.json", json_text(budget))
-        for filename in ["report.css", "proscenium.svg"]:
+        for filename in ASSET_FILES:
             write_new(target / "assets" / filename, (ASSETS / filename).read_text())
     except BaseException:
         shutil.rmtree(target)
         raise
     os.chmod(target, 0o700)
-    return {"directory": str(target), "files": 4, "published": False}
+    return {"directory": str(target), "files": 2 + len(ASSET_FILES), "published": False}

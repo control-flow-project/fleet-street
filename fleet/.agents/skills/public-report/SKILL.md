@@ -13,7 +13,7 @@ python3 -m tools.fleet_street report --input examples/report.json \
 This formats supplied statements and calculated figures; it does not verify
 their truth, fetch sources or publish anything. For real work put the directory
 in your ignored workarea. Its output includes only HTML, local CSS, an authored
-SVG and the calculated budget JSON. It does not copy your input directory.
+SVG, the calculated budget JSON and the MIT asset notice. It does not copy your input directory.
 
 Review all generated files, text, source links and names for the intended public
 audience. Confirm explicit human authorization to release that information.

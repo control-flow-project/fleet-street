@@ -108,8 +108,8 @@ python3 -m tools.fleet_street report --input examples/report.json \
   --budget examples/budget.json --directory .local/public-report
 ```
 
-Review all four files: `index.html`, `assets/report.css`,
-`assets/proscenium.svg` and `data/budget.json`. The report formats supplied claims;
+Review all five files: `index.html`, `assets/report.css`,
+`assets/proscenium.svg`, `assets/LICENSE.txt` and `data/budget.json`. The report formats supplied claims;
 it is not an automatic fact-check or private-information detector.
 
 After explicit release permission, an enrolled agent can run:
