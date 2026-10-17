@@ -55,7 +55,12 @@ Private file modes and instructions are not isolation between same-user agents.
 ## Prepare a working fleet
 
 Clone the repository, change into it and use your actual public server origin,
-human Matrix ID and a short unique agent-name prefix:
+human Matrix ID and a short unique agent-name prefix.
+
+An HTTPS origin is used for a remote instance. Native loopback HTTP origins are
+also accepted for local development; HTTP to other hosts is rejected.
+
+For example:
 
 ```sh
 git clone https://github.com/control-flow-project/fleet-street.git

@@ -32,11 +32,13 @@ Run these commands under the resource scope shown in the README.
 
 | Check | Result |
 | --- | --- |
-| Python tests | 32 cases, including exact arithmetic, rounding, invalid input, private setup, output preservation, HTML escaping and hand-off arguments |
+| Python tests | 33 cases, including exact arithmetic, rounding, invalid input, private setup, output preservation, HTML escaping and hand-off arguments |
 | Official installed fleet loader | Ten Codex instances accepted through an isolated controller |
 | Invalid duplicate registered name within roster | Rejected by official loader |
 | Unimplemented runtime and unsupported effort | Rejected by official loader |
 | Per-instance effort override | Accepted and retained in the inspected roster |
+| Loopback HTTP development origin | Accepted by the official loader; non-loopback HTTP is rejected by configuration tests |
+| Configure result | Reports that no enrollment action was performed; never invents the enrollment status of a reused fleet |
 | Stopped readiness check | Fails without starting an agent |
 | Native model turns or enrollment | Zero |
 | Report browser tests | Two cases; local assets, exact figures, opaque-origin storage denial and no console errors |

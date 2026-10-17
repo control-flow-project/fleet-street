@@ -43,7 +43,8 @@ class ConfigurationTests(unittest.TestCase):
 
     def test_private_generation_sets_every_owner_and_registered_name(self) -> None:
         result = configure("https://chat.example.org/", "@alice:chat.example.org", "alice-fs", destination=self.target)
-        self.assertFalse(result["enrolled"])
+        self.assertFalse(result["enrollment_performed"])
+        self.assertNotIn("enrolled", result)
         roster = tomllib.loads((self.target / "runtime.toml").read_text())
         self.assertEqual(roster["coordination"]["server"], "https://chat.example.org")
         for item in roster["instances"]:
@@ -63,6 +64,8 @@ class ConfigurationTests(unittest.TestCase):
         instructions.write_text("Operator's revised instructions")
         result = configure("https://chat.example.org", "@alice:chat.example.org", "alice-fs", destination=self.target)
         self.assertTrue(result["existing"])
+        self.assertFalse(result["enrollment_performed"])
+        self.assertNotIn("enrolled", result)
         self.assertEqual(history.read_text(), "retained native history")
         self.assertEqual(instructions.read_text(), "Operator's revised instructions")
 
@@ -86,6 +89,12 @@ class ConfigurationTests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     render_roster(source, server, owner, prefix)
         self.assertFalse(self.target.exists())
+
+    def test_local_development_origins_follow_the_native_fleet_contract(self) -> None:
+        source = (TEMPLATE / "runtime.toml").read_text()
+        for origin in ["http://localhost:8080", "http://127.0.0.1:8080", "http://[::1]:8080"]:
+            generated = render_roster(source, origin, "@owner:example.test", "local-fs")
+            self.assertEqual(tomllib.loads(generated)["coordination"]["server"], origin)
 
     def test_symlink_destination_cannot_be_followed(self) -> None:
         real = Path(self.temporary.name) / "real"

@@ -84,8 +84,13 @@ try {
   fs.writeFileSync(rosterPath, fs.readFileSync(rosterPath, "utf8").replace('fleet = "fleet-street"', 'fleet = "override-example"').replace('[instances.listener_options]', '[instances.runtime_options]\nmodel_reasoning_effort = "high"\n\n[instances.listener_options]'));
   const overridden = call(["add", override]);
   assert.equal(overridden.instances[0].instance.runtimeOptions.model_reasoning_effort, "high");
+  const local = path.join(fixture, "loopback");
+  copyFixture(local);
+  const localRoster = path.join(local, "runtime.toml");
+  fs.writeFileSync(localRoster, fs.readFileSync(localRoster, "utf8").replace('fleet = "fleet-street"', 'fleet = "loopback-example"').replace('server = "https://example.test"', 'server = "http://127.0.0.1:8080"'));
+  assert.equal(call(["add", local]).instances.length, 10, "Native loopback development origin accepted");
   assert.equal(call(["show", "fleet-street"]).instances.every(instance => !instance.desiredActive), true);
-  console.log(JSON.stringify({ release: version, agents: 10, officialLoader: "passed", rejected: ["duplicate name", "unimplemented runtime", "unsupported effort"], perInstanceOverride: "passed", stoppedReadiness: "rejected", modelTurns: 0, enrollment: false }));
+  console.log(JSON.stringify({ release: version, agents: 10, officialLoader: "passed", rejected: ["duplicate name", "unimplemented runtime", "unsupported effort"], perInstanceOverride: "passed", loopbackOrigin: "passed", stoppedReadiness: "rejected", modelTurns: 0, enrollment: false }));
 } finally {
   try {
     if (daemon && daemon.exitCode === null) {

@@ -36,4 +36,6 @@ Record necessity and verification in `.analysis/necessity-ledger.md`.
 
 Never commit/push main, force-push, discard shared work or create a PR. The owner
 creates PRs manually from the prepared branch. Git identity is
-jeswin <jeswinpk@agilehead.com>. No new delegated work without explicit approval.
+jeswin <jeswinpk@agilehead.com>. Do not spawn Codex subagents for repository
+development without explicit approval. Authorized domain hand-offs follow the
+fleet's own instructions and the human assignment.

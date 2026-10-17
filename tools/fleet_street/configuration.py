@@ -14,16 +14,17 @@ REPOSITORY = Path(__file__).resolve().parents[2]
 TEMPLATE = REPOSITORY / "fleet"
 
 
-def public_origin(value: str) -> str:
+def server_origin(value: str) -> str:
     parsed = urlsplit(value)
-    if parsed.scheme != "https" or not parsed.hostname or parsed.username or parsed.password or parsed.path not in ("", "/") or parsed.query or parsed.fragment or any(character.isspace() or ord(character) < 32 for character in value):
-        raise ValueError("Supply one public HTTPS server origin without credentials, path or query")
+    allowed = parsed.scheme == "https" or parsed.scheme == "http" and parsed.hostname in {"localhost", "127.0.0.1", "::1"}
+    if not allowed or not parsed.hostname or parsed.username or parsed.password or parsed.path not in ("", "/") or parsed.query or parsed.fragment or any(character.isspace() or ord(character) < 32 for character in value):
+        raise ValueError("Supply an HTTPS or loopback HTTP server origin without credentials, path or query")
     _ = parsed.port
     return value.removesuffix("/")
 
 
 def render_roster(source: str, server: str, owner: str, prefix: str) -> str:
-    origin = public_origin(server)
+    origin = server_origin(server)
     if not re.fullmatch(r"@[^\s:]+:[^\s/]+", owner) or any(ord(character) < 32 for character in owner):
         raise ValueError("Supply the exact human Matrix owner ID")
     if not re.fullmatch(r"[a-z][a-z0-9-]*", prefix):
@@ -55,7 +56,7 @@ def configure(server: str, owner: str, prefix: str, model: str | None = None, *,
                 raise ValueError("Existing native configuration is incomplete; working files were not changed")
             if options.get("model") != model:
                 raise ValueError("Existing native model selection differs; configuration and histories were not changed")
-        return {"configuration": str(target / "runtime.toml"), "existing": True, "agents": len(instances), "enrolled": False}
+        return {"configuration": str(target / "runtime.toml"), "existing": True, "agents": len(instances), "enrollment_performed": False}
     with tempfile.TemporaryDirectory(prefix="configure-", dir=target.parent) as temporary:
         staging = Path(temporary) / "fleet"
         for source in TEMPLATE.rglob("*"):
@@ -74,4 +75,4 @@ def configure(server: str, owner: str, prefix: str, model: str | None = None, *,
         if target.exists() or target.is_symlink():
             raise ValueError("Fleet destination appeared during setup; it was not changed")
         staging.rename(target)
-    return {"configuration": str(target / "runtime.toml"), "existing": False, "agents": len(instances), "enrolled": False}
+    return {"configuration": str(target / "runtime.toml"), "existing": False, "agents": len(instances), "enrollment_performed": False}
