@@ -15,7 +15,7 @@ const fleetRoot = path.join(fixture, "working");
 const cli = fileURLToPath(import.meta.resolve("@ctlflow/fleet/executable"));
 const daemonEntry = fileURLToPath(import.meta.resolve("@ctlflow/fleetd/executable"));
 const version = JSON.parse(fs.readFileSync(fileURLToPath(import.meta.resolve("@ctlflow/fleet/package.json")), "utf8")).version;
-assert.equal(version, "0.1.20");
+assert.equal(version, "0.1.23");
 const environment = { ...process.env, HOME: path.join(fixture, "home"), CODEX_HOME: path.join(fixture, "native-home"),
   XDG_CONFIG_HOME: path.join(fixture, "config"), XDG_STATE_HOME: path.join(fixture, "state"), XDG_DATA_HOME: path.join(fixture, "data") };
 for (const directory of [environment.HOME, environment.CODEX_HOME, environment.XDG_CONFIG_HOME, environment.XDG_STATE_HOME, environment.XDG_DATA_HOME]) fs.mkdirSync(directory, { mode: 0o700 });
