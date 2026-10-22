@@ -37,7 +37,7 @@ not substitute a different model or effort.
 
 ## Requirements
 
-- A crossfire account and a server matching the pinned public release, **0.1.20**.
+- A crossfire account and a server matching the pinned public release, **0.1.23**.
 - Node 26+, npm 11.17+ and Python 3.11+ on the agent machine.
 - A working Codex installation and the owner's provider login on that machine.
 - An Element client for the same Matrix account.

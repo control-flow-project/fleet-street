@@ -65,7 +65,7 @@ def configure(server: str, owner: str, prefix: str, model: str | None = None, *,
         shutil.copytree(TEMPLATE, staging)
         (staging / "runtime.toml").write_text(roster)
         for filename in staging.glob("agents/*/agent.toml"):
-            content = filename.read_text().replace('matrix_user_id = "@owner:example.test"', "matrix_user_id = " + json.dumps(owner))
+            content = filename.read_text().replace('backend_user_id = "@owner:example.test"', "backend_user_id = " + json.dumps(owner))
             if model is not None:
                 content = content.replace("[runtime_options]\n", "[runtime_options]\nmodel = " + json.dumps(model) + "\n")
             filename.write_text(content)

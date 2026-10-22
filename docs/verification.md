@@ -1,4 +1,19 @@
-# Verification — 2026-10-17
+# Verification
+
+## Current configuration — 2026-10-22
+
+All ten role definitions and the configuration renderer use the current
+`backend_user_id` wake-sender field. The development-only public fleet/fleetd
+dependency is pinned to 0.1.23; no runtime implementation is copied here.
+
+`npm ci --ignore-scripts` and `npm run check` pass in the required bounded scope:
+33 Python tests, official installed-fleet acceptance of all ten definitions and
+two real-browser report tests. Duplicate names, unsupported runtime/effort and
+stopped readiness remain rejected. Per-instance overrides and loopback origins
+are accepted. There are zero model turns, enrollments or public publications.
+No operating fleet, provider login or native history is changed.
+
+## Original verification — 2026-10-17
 
 ## Scope
 

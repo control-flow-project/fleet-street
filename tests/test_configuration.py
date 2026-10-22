@@ -38,7 +38,7 @@ class ConfigurationTests(unittest.TestCase):
             self.assertEqual(role["runtime_options"]["model_reasoning_effort"], "medium" if item["key"] == "stage-manager" else "high")
             policy = role["coordination_options"]
             self.assertEqual(policy["wake_mode"], "selected")
-            self.assertEqual(policy["wake_senders"], [{"matrix_user_id": "@owner:example.test", "include_agents": True}])
+            self.assertEqual(policy["wake_senders"], [{"backend_user_id": "@owner:example.test", "include_agents": True}])
             self.assertEqual(policy["permissions"], ["room.agent.invite"] if item["key"] == "stage-manager" else [])
 
     def test_private_generation_sets_every_owner_and_registered_name(self) -> None:
@@ -50,7 +50,7 @@ class ConfigurationTests(unittest.TestCase):
         for item in roster["instances"]:
             self.assertEqual(item["name"], "alice-fs-" + item["key"])
             role = tomllib.loads((self.target / "agents" / item["definition"] / "agent.toml").read_text())
-            self.assertEqual(role["coordination_options"]["wake_senders"][0]["matrix_user_id"], "@alice:chat.example.org")
+            self.assertEqual(role["coordination_options"]["wake_senders"][0]["backend_user_id"], "@alice:chat.example.org")
         if os.name == "posix":
             for item in [self.target, *self.target.rglob("*")]:
                 self.assertEqual(item.stat().st_mode & 0o777, 0o700 if item.is_dir() else 0o600)

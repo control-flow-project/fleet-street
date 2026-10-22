@@ -13,7 +13,7 @@
     "check": "npm test && npm run test:fleet && npm run test:browser"
   },
   "devDependencies": {
-    "@ctlflow/fleet": "0.1.20",
+    "@ctlflow/fleet": "0.1.23",
     "playwright": "1.63.0"
   }
 }
