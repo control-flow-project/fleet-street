@@ -74,10 +74,10 @@ or start another listener. Do not expose that command or machine details to room
 
 ## Update and storage
 
-Use the instance's approved exact public release and its documented update flow.
-Update the sample's dependency pin deliberately; never replace package versions
-silently or bypass the npm release-age policy for external packages. The checked-in
-named exclusions cover only the two owned public fleet packages, as in ctlflow.
+Use the instance's approved exact native distribution and its documented update
+flow. Update package.json's ctlflow.version deliberately; keep sibling native
+product directories and artifacts together. npm supplies only browser-test
+tooling and retains its external dependency release-age policy.
 
 Remove `.temp/` and development `node_modules/` after verification if no current
 work needs them. Never include `.local/`, workareas, provider credentials or source
