@@ -5,15 +5,20 @@
   "license": "MIT",
   "author": "Jeswin P Kumar <jeswinpk@agilehead.com>",
   "type": "module",
-  "engines": { "node": ">=26.0.0", "npm": ">=11.17.0" },
+  "engines": {
+    "node": ">=26.0.0",
+    "npm": ">=11.17.0"
+  },
   "scripts": {
     "test": "python3 -m unittest discover -s tests -v",
     "test:fleet": "node scripts/verify-fleet.mjs",
     "test:browser": "node --test tests/browser.test.mjs",
-    "check": "npm test && npm run test:fleet && npm run test:browser"
+    "check": "node scripts/check.mjs"
   },
   "devDependencies": {
-    "@ctlflow/fleet": "0.1.23",
     "playwright": "1.63.0"
+  },
+  "ctlflow": {
+    "version": "0.1.26"
   }
 }

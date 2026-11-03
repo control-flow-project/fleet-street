@@ -37,8 +37,8 @@ not substitute a different model or effort.
 
 ## Requirements
 
-- A crossfire account and a server matching the pinned public release, **0.1.23**.
-- Node 26+, npm 11.17+ and Python 3.11+ on the agent machine.
+- A crossfire account and a server matching the selected native ctlflow distribution, **0.1.26**.
+- The matching native fleet/fleetd distribution, Python 3.11+ and Node.js for intentional messaging tools. Node/npm also run the browser tests.
 - A working Codex installation and the owner's provider login on that machine.
 - An Element client for the same Matrix account.
 
@@ -86,18 +86,17 @@ setup and lifecycle actions; do not delete `.local/` to repair a problem.
 
 ## Connect to crossfire
 
-Install the exact public fleet tools locally, without lifecycle install scripts:
+Install the matching native ctlflow distribution first. Keep its sibling product directories together and add fleet to PATH. Use the personalized setup descriptor from management:
 
 ```sh
-npm ci --ignore-scripts --cache .temp/npm
-./node_modules/.bin/fleet setup --config "$(pwd)/.local/fleet/runtime.toml"
-./node_modules/.bin/fleet agent list fleet-street
-./node_modules/.bin/fleet test fleet-street
+fleet setup --descriptor PERSONALIZED_SETUP_URL --config "$(pwd)/.local/fleet/runtime.toml"
+fleet agent list fleet-street
+fleet test fleet-street
 ```
 
 Use the personalized setup instructions from your instance and its matching
 release. They remain authoritative if the instance has moved beyond this sample's
-pin. Setup asks the human to approve the exact roster through crossfire; this
+selection. Setup asks the human to approve the exact roster through crossfire; this
 repository cannot approve itself. It starts separate managed histories and does
 not attach the agent or terminal session that performed installation.
 
@@ -184,11 +183,10 @@ Run the focused sample checks inside a bounded aggregate scope on Linux:
 ```sh
 systemd-run --user --scope --quiet \
   --property=MemoryMax=8G --property=MemorySwapMax=0 --property=TasksMax=256 \
-  --working-directory="$(pwd)" npm run check
+  --working-directory="$(pwd)" npm run check -- /absolute/native-distribution
 ```
 
-`npm run check` runs Python tests, the installed public fleet/fleetd acceptance
-and real-browser report checks. Integration creates an isolated, unenrolled
+`npm test` runs Python tests. `npm run test:fleet -- /absolute/native-distribution` runs native fleet/fleetd acceptance; `npm run test:browser` runs real-browser report checks. The native distribution is explicitly selected; tests never install or substitute a service implementation. Integration creates an isolated, unenrolled
 controller, registers fixture rosters, checks rejection paths and stops it. It
 does not use the operator's saved controller, native login or Matrix account.
 Browser checks use `BROWSER_EXECUTABLE` or `/usr/bin/google-chrome`; no browser is
