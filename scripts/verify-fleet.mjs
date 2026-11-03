@@ -9,7 +9,8 @@ import { setTimeout as delay } from "node:timers/promises";
 const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const temporary = path.join(root, ".temp");
 fs.mkdirSync(temporary, { recursive: true });
-const fixture = fs.mkdtempSync(path.join(temporary, "fleet-"));
+const fixture = fs.mkdtempSync("/var/tmp/fleet-street-");
+fs.chmodSync(fixture, 0o700);
 const controllerRoot = path.join(fixture, "controller");
 const fleetRoot = path.join(fixture, "working");
 const [distribution] = process.argv.slice(2);
@@ -63,6 +64,7 @@ try {
   const deadline = Date.now() + 15000;
   while (!fs.existsSync(path.join(controllerRoot, "fleetd.sock"))) {
     assert.equal(daemon.exitCode, null, diagnostics);
+    assert.equal(daemon.signalCode, null, diagnostics);
     assert.equal(Date.now() < deadline, true, "Isolated controller readiness deadline");
     await delay(25);
   }
@@ -75,9 +77,9 @@ try {
   assert.equal(call(["agent", "list", "fleet-street"]).length, 10);
   assert.match(call(["test", "fleet-street"], false), /stopped|not ready/iu);
   for (const [label, alter, expected] of [
-    ["duplicate-name", directory => { const filename = path.join(directory, "runtime.toml"); fs.writeFileSync(filename, fs.readFileSync(filename, "utf8").replace('name = "check-dramaturg"', 'name = "check-stage-manager"')); }, /Duplicate instance name/u],
+    ["duplicate-name", directory => { const filename = path.join(directory, "runtime.toml"); fs.writeFileSync(filename, fs.readFileSync(filename, "utf8").replace('name = "check-dramaturg"', 'name = "check-stage-manager"')); }, /duplicate.*name|names.*unique/iu],
     ["unsupported-runtime", directory => { const filename = path.join(directory, "agents/dramaturg/agent.toml"); fs.writeFileSync(filename, fs.readFileSync(filename, "utf8").replace('runtime = "codex"', 'runtime = "claude"')); }, /codex|runtime|pi|Expected/iu],
-    ["unsupported-effort", directory => { const filename = path.join(directory, "agents/dramaturg/agent.toml"); fs.writeFileSync(filename, fs.readFileSync(filename, "utf8").replace('model_reasoning_effort = "high"', 'model_reasoning_effort = "imaginary"')); }, /effort|Expected|supported/iu],
+    ["unsupported-effort", directory => { const filename = path.join(directory, "agents/dramaturg/agent.toml"); fs.writeFileSync(filename, fs.readFileSync(filename, "utf8").replace('model_reasoning_effort = "high"', 'model_reasoning_effort = "imaginary"')); }, /invalid:.*(?:effort|Choose one of|supported)/iu],
   ]) {
     const invalid = path.join(fixture, label);
     copyFixture(invalid);
