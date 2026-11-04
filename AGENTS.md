@@ -8,8 +8,7 @@ reimplement those responsibilities here.
 
 Keep one current configuration format and command path. Do not add compatibility
 aliases, alternate listeners, services, database infrastructure or automatic
-downloads. Tools use the Python standard library; the exact public fleet release
-is a development dependency for integration verification, not a runtime fork.
+downloads. Tools use the Python standard library; integration verification uses an explicitly selected matching native fleet/fleetd distribution. npm is used only for browser test tooling; no Node service package is installed.
 
 Keep all ten role definitions, the roster and the routing directory aligned.
 Give each role its own workarea. Shared instructions and skill references live

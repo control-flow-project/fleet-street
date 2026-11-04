@@ -9,13 +9,20 @@ import { setTimeout as delay } from "node:timers/promises";
 const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const temporary = path.join(root, ".temp");
 fs.mkdirSync(temporary, { recursive: true });
-const fixture = fs.mkdtempSync(path.join(temporary, "fleet-"));
+const fixture = fs.mkdtempSync("/var/tmp/fleet-street-");
+fs.chmodSync(fixture, 0o700);
 const controllerRoot = path.join(fixture, "controller");
 const fleetRoot = path.join(fixture, "working");
-const cli = fileURLToPath(import.meta.resolve("@ctlflow/fleet/executable"));
-const daemonEntry = fileURLToPath(import.meta.resolve("@ctlflow/fleetd/executable"));
-const version = JSON.parse(fs.readFileSync(fileURLToPath(import.meta.resolve("@ctlflow/fleet/package.json")), "utf8")).version;
-assert.equal(version, "0.1.23");
+const [distribution] = process.argv.slice(2);
+assert(process.argv.length === 3 && distribution && path.isAbsolute(distribution),
+  'Supply one absolute installed native ctlflow distribution directory');
+const metadata = JSON.parse(fs.readFileSync(path.join(distribution, 'distribution.json'), 'utf8'));
+assert.equal(metadata.schemaVersion, 1); assert.equal(metadata.platform, 'linux-x64');
+assert(['csharp', 'rust'].includes(metadata.implementation));
+const cli = path.join(distribution, 'fleet/fleet'), daemonEntry = path.join(distribution, 'fleetd/fleetd');
+for (const binary of [cli, daemonEntry]) assert.equal(fs.readFileSync(binary).subarray(0, 4).toString('hex'), '7f454c46', 'Select native executable bytes');
+const version = metadata.version;
+assert.equal(version, JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8')).ctlflow.version, 'Use the selected exact native release');
 const environment = { ...process.env, HOME: path.join(fixture, "home"), CODEX_HOME: path.join(fixture, "native-home"),
   XDG_CONFIG_HOME: path.join(fixture, "config"), XDG_STATE_HOME: path.join(fixture, "state"), XDG_DATA_HOME: path.join(fixture, "data") };
 for (const directory of [environment.HOME, environment.CODEX_HOME, environment.XDG_CONFIG_HOME, environment.XDG_STATE_HOME, environment.XDG_DATA_HOME]) fs.mkdirSync(directory, { mode: 0o700 });
@@ -24,7 +31,7 @@ let ended;
 let diagnostics = "";
 
 function call(arguments_, expectedSuccess = true) {
-  const result = spawnSync(process.execPath, [cli, "--root", controllerRoot, ...arguments_], { cwd: root, env: environment, encoding: "utf8", timeout: 15000, maxBuffer: 2 * 1024 * 1024 });
+  const result = spawnSync(cli, ["--root", controllerRoot, ...arguments_], { cwd: root, env: environment, encoding: "utf8", timeout: 15000, maxBuffer: 2 * 1024 * 1024 });
   assert.equal(result.error, undefined, result.error?.message);
   if (expectedSuccess) {
     assert.equal(result.status, 0, result.stderr.slice(0, 4000));
@@ -50,13 +57,14 @@ function copyFixture(directory) {
 try {
   const configuration = spawnSync("python3", ["-c", "from pathlib import Path; from tools.fleet_street.configuration import configure; import sys; configure('https://example.test', '@owner:example.test', 'check', destination=Path(sys.argv[1]))", fleetRoot], { cwd: root, env: environment, encoding: "utf8", timeout: 10000 });
   assert.equal(configuration.status, 0, configuration.stderr);
-  daemon = spawn(process.execPath, [daemonEntry, "--root", controllerRoot, "--name", "fleet-street-check"], { cwd: root, env: environment, stdio: ["ignore", "pipe", "pipe"] });
+  daemon = spawn(daemonEntry, ["--root", controllerRoot, "--name", "fleet-street-check"], { cwd: root, env: environment, stdio: ["ignore", "pipe", "pipe"] });
   ended = once(daemon, "exit");
   daemon.stdout.on("data", chunk => { diagnostics = (diagnostics + chunk).slice(-4000); });
   daemon.stderr.on("data", chunk => { diagnostics = (diagnostics + chunk).slice(-4000); });
   const deadline = Date.now() + 15000;
   while (!fs.existsSync(path.join(controllerRoot, "fleetd.sock"))) {
     assert.equal(daemon.exitCode, null, diagnostics);
+    assert.equal(daemon.signalCode, null, diagnostics);
     assert.equal(Date.now() < deadline, true, "Isolated controller readiness deadline");
     await delay(25);
   }
@@ -69,9 +77,9 @@ try {
   assert.equal(call(["agent", "list", "fleet-street"]).length, 10);
   assert.match(call(["test", "fleet-street"], false), /stopped|not ready/iu);
   for (const [label, alter, expected] of [
-    ["duplicate-name", directory => { const filename = path.join(directory, "runtime.toml"); fs.writeFileSync(filename, fs.readFileSync(filename, "utf8").replace('name = "check-dramaturg"', 'name = "check-stage-manager"')); }, /Duplicate instance name/u],
+    ["duplicate-name", directory => { const filename = path.join(directory, "runtime.toml"); fs.writeFileSync(filename, fs.readFileSync(filename, "utf8").replace('name = "check-dramaturg"', 'name = "check-stage-manager"')); }, /duplicate.*name|names.*unique/iu],
     ["unsupported-runtime", directory => { const filename = path.join(directory, "agents/dramaturg/agent.toml"); fs.writeFileSync(filename, fs.readFileSync(filename, "utf8").replace('runtime = "codex"', 'runtime = "claude"')); }, /codex|runtime|pi|Expected/iu],
-    ["unsupported-effort", directory => { const filename = path.join(directory, "agents/dramaturg/agent.toml"); fs.writeFileSync(filename, fs.readFileSync(filename, "utf8").replace('model_reasoning_effort = "high"', 'model_reasoning_effort = "imaginary"')); }, /effort|Expected|supported/iu],
+    ["unsupported-effort", directory => { const filename = path.join(directory, "agents/dramaturg/agent.toml"); fs.writeFileSync(filename, fs.readFileSync(filename, "utf8").replace('model_reasoning_effort = "high"', 'model_reasoning_effort = "imaginary"')); }, /invalid:.*(?:effort|Choose one of|supported)/iu],
   ]) {
     const invalid = path.join(fixture, label);
     copyFixture(invalid);

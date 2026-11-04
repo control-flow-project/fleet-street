@@ -8,9 +8,9 @@ do not reuse these examples against an unrelated operating fleet.
 ## Status
 
 ```sh
-./node_modules/.bin/fleet show fleet-street
-./node_modules/.bin/fleet agent list fleet-street
-./node_modules/.bin/fleet test fleet-street
+fleet show fleet-street
+fleet agent list fleet-street
+fleet test fleet-street
 ```
 
 Readiness is not a completed task. A listener can be ready while a native session
@@ -26,10 +26,10 @@ invitation alone does not establish successful input delivery or a finished task
 ## Stop and resume
 
 ```sh
-./node_modules/.bin/fleet stop fleet-street
-./node_modules/.bin/fleet start fleet-street
-./node_modules/.bin/fleet agent stop fleet-street budget-analyst
-./node_modules/.bin/fleet agent start fleet-street budget-analyst
+fleet stop fleet-street
+fleet start fleet-street
+fleet agent stop fleet-street budget-analyst
+fleet agent start fleet-street budget-analyst
 ```
 
 Normal start resumes the saved native histories, identity and configured options.
@@ -74,10 +74,10 @@ or start another listener. Do not expose that command or machine details to room
 
 ## Update and storage
 
-Use the instance's approved exact public release and its documented update flow.
-Update the sample's dependency pin deliberately; never replace package versions
-silently or bypass the npm release-age policy for external packages. The checked-in
-named exclusions cover only the two owned public fleet packages, as in ctlflow.
+Use the instance's approved exact native distribution and its documented update
+flow. Update package.json's ctlflow.version deliberately; keep sibling native
+product directories and artifacts together. npm supplies only browser-test
+tooling and retains its external dependency release-age policy.
 
 Remove `.temp/` and development `node_modules/` after verification if no current
 work needs them. Never include `.local/`, workareas, provider credentials or source

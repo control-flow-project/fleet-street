@@ -3,6 +3,7 @@ import { after, before, test } from "node:test";
 import fs from "node:fs";
 import http from "node:http";
 import path from "node:path";
+import os from "node:os";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
@@ -13,6 +14,7 @@ let fixture;
 let server;
 let browser;
 let origin;
+let browserTemporary;
 
 before(async () => {
   fs.mkdirSync(artifacts, { recursive: true });
@@ -28,13 +30,15 @@ before(async () => {
   });
   await new Promise(resolve => server.listen(0, "127.0.0.1", resolve));
   origin = `http://127.0.0.1:${server.address().port}`;
-  browser = await chromium.launch({ executablePath: process.env.BROWSER_EXECUTABLE ?? "/usr/bin/google-chrome", args: ["--no-sandbox", "--disable-dev-shm-usage", "--disable-breakpad", "--disable-crash-reporter"], env: { ...process.env, TMPDIR: path.join(root, ".temp"), XDG_CONFIG_HOME: path.join(artifacts, "config"), XDG_CACHE_HOME: path.join(artifacts, "cache") } });
+  browserTemporary = fs.mkdtempSync(path.join(os.tmpdir(), "fleet-street-browser-"));
+  browser = await chromium.launch({ executablePath: process.env.BROWSER_EXECUTABLE ?? "/usr/bin/google-chrome", args: ["--no-sandbox", "--disable-dev-shm-usage", "--disable-breakpad", "--disable-crash-reporter"], env: { ...process.env, TMPDIR: browserTemporary, DBUS_SESSION_BUS_ADDRESS: "unix:path=/dev/null", XDG_CONFIG_HOME: path.join(artifacts, "config"), XDG_CACHE_HOME: path.join(artifacts, "cache") } });
 });
 
 after(async () => {
   if (browser) await browser.close();
   if (server) await new Promise(resolve => server.close(resolve));
   if (fixture) fs.rmSync(fixture, { recursive: true, force: true });
+  if (browserTemporary) fs.rmSync(browserTemporary, { recursive: true, force: true });
 });
 
 test("report uses local assets and readable figures inside an opaque publication sandbox", async context => {
